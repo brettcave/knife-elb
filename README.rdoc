@@ -49,9 +49,16 @@ This will add an instance with INSTANCE_ID (i-dg12b7bd) to an exitsing ELB-ID (i
     knife elb instance delete infra-staging i-dg12b7bd
 This will detach instance with INSTANCE_ID (i-dg12b7bd) from an exitsing ELB-ID (infra-staging)
 
+== knife elb modify ELB ( options )
+
+Available options include:
+
+    --enable-connection-draining  (default: disabled)
+    --connection-draining-timeout (default: 300)
+    --enable-cross-zone-balancing (default: disabled)
+    --connection-idle-timeout     (default: 60)
 
 
-Note: knife elb does not create & delete elbs or change listener configurations.
 = LICENSE:
 
 Author:: Ranjib Dey (<dey.ranjib@gmail.com>)
