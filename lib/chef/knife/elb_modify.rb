@@ -69,7 +69,6 @@ class Chef
         attrs["CrossZoneLoadBalancing"] = {"Enabled" => true} if config[:enable_cross_zone_balancing]
         attrs["ConnectionSettings"] = {"IdleTimeout" => config[:connection_idle_timeout]} if ! config[:connection_idle_timeout].nil?
 
-        ui.info("Resolved attributes: #{attrs}")
         attrs
       end
 
