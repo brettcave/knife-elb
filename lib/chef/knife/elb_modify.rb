@@ -29,6 +29,11 @@ class Chef
             :description => 'Enable connection draining',
             :boolean => true
 
+      option :disable_connection_draining,
+             :long => '--disable-connection-draining',
+             :description => 'Disable connection draining',
+             :boolean => true
+
       option :connection_draining_timeout,
             :long => '--connection-draining-timeout Timeout',
             :description => 'Max time (in seconds) to keep existing conns open before deregistering instances.',
@@ -40,10 +45,14 @@ class Chef
             :description => 'Enable cross zone load balancing',
             :boolean => true
 
+      option :disable_cross_zone_balancing,
+             :long => '--disable-cross-zone-balancing',
+             :description => 'Disable cross zone load balancing',
+             :boolean => true
+
       option :connection_idle_timeout,
             :long => '--connection-idle-timeout Timeout',
             :description => 'time (in seconds) the connection is allowed to be idle before it is closed.',
-            :default => 60,
             :proc => Proc.new { |i| i.to_i }
 
       def run
@@ -61,13 +70,17 @@ class Chef
 
       def build_attributes
         attrs = {}
-        attrs["ConnectionDraining"] = {
-            "Enabled" => true,
-            "Timeout" => config[:connection_draining_timeout]
-        }  if config[:enable_connection_draining]
 
-        attrs["CrossZoneLoadBalancing"] = {"Enabled" => true} if config[:enable_cross_zone_balancing]
-        attrs["ConnectionSettings"] = {"IdleTimeout" => config[:connection_idle_timeout]} if ! config[:connection_idle_timeout].nil?
+        enable_connection_draining = config[:disable_connection_draining] ? false : config[:enable_connection_draining]
+        attrs["ConnectionDraining"] = {
+            "Enabled" => enable_connection_draining,
+            "Timeout" => config[:connection_draining_timeout]
+        } unless enable_connection_draining.nil?
+
+        enable_cross_zone_balancing = config[:disable_cross_zone_balancing] ? false : config[:enable_cross_zone_balancing]
+        attrs["CrossZoneLoadBalancing"] = {"Enabled" => enable_cross_zone_balancing} unless enable_cross_zone_balancing.nil?
+
+        attrs["ConnectionSettings"] = {"IdleTimeout" => config[:connection_idle_timeout]} unless config[:connection_idle_timeout].nil?
 
         attrs
       end
@@ -80,8 +93,8 @@ class Chef
           exit 1
         end
 
-        if config[:availability_zones].empty?
-          ui.error("You have not provided a valid availability zone value. (-Z parameter)")
+        if (config[:enable_connection_draining] && config[:disable_connection_draining]) || (config[:enable_cross_zone_balancing] && config[:disable_cross_zone_balancing])
+          ui.error('Conflicting options. Please check that only 1 of --enable / --disable options are specified.')
           exit 1
         end
       end
