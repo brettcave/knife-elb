@@ -17,7 +17,7 @@
 #
 
 require 'chef/knife'
-require 'chef/knife/ec2_base'
+require 'chef/knife/aws_base'
 
 class Chef
   class Knife
@@ -25,7 +25,7 @@ class Chef
 
       def self.included(includer)
         includer.class_eval do
-          include Ec2Base
+          include AwsBase
 
           def connection
             @connection ||= begin
