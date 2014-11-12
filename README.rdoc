@@ -10,20 +10,16 @@ Be sure you are running the latest version Chef. Versions earlier than 0.10.0 do
 
     gem install chef
 
-This plugin depends upon the knife-ec2 plugin
-
-    gem install knife-ec2
-
 This plugin is distributed as a Ruby Gem. To install it, run:
 
     gem install knife-elb
 
+This should resolve dependencies (knife-aws-base -> fog & chef)
+
 Note: Depending on your system's configuration, you may need to run this command with root/ sudo privileges.
 
 = CONFIGURATION:
-Ditto as knife-ec2 configuration. i.e. put you aws credentials in knife.rb or pass them as command line arguments
-{knife-ec2}[https://github.com/opscode/knife-ec2]
-
+Put you aws credentials in knife.rb or pass them as command line arguments
 
 = SUBCOMMANDS:
 
